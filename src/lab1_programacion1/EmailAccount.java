@@ -12,6 +12,10 @@ public class EmailAccount {
         this.nombre= nombre;
         this.inbox = new Email[50]; 
     }
+    
+    public EmailAccount(){
+        inbox = new Email[50]; 
+    }
     // C
     public String getDireccion() {
         return direccion;
@@ -23,6 +27,15 @@ public class EmailAccount {
         return nombre;
     }
     //D
+    public EmailAccount buscar(EmailAccount[] accounts, String direccion, String password){
+        for (EmailAccount cuenta : accounts) {
+            if (cuenta.getDireccion().equals(direccion) && cuenta.getPassword().equals(password)) {
+                return cuenta;
+            }
+        }
+        return null;
+    }
+    
     public boolean recibirEmail(Email em) {
         for (int i = 0; i < inbox.length; i++) {
             if (inbox[i] == null) {

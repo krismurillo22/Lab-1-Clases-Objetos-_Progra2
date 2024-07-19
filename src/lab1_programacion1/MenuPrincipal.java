@@ -12,9 +12,11 @@ import java.awt.event.ActionListener;
  *
  * @author Administrator
  */
+
 public class MenuPrincipal {
-    EmailAccount cuentas;
-    Email email;
+    private static EmailAccount[] accounts = new EmailAccount[10]; // Arreglo de cuentas
+    private static int accountCount = 0; // Número actual de cuentas
+    private static EmailAccount cuentaActual = null;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(MenuPrincipal::createAndShowGUI);
@@ -186,30 +188,112 @@ public class MenuPrincipal {
             return;
         }
 
-        accounts[accountCount++] = new Account(email, password, 10); // 10 es la capacidad del inbox
+        accounts[accountCount++] = new EmailAccount(email, password, 10); // 10 es la capacidad del inbox
         cuentaActual = accounts[accountCount - 1];
         JOptionPane.showMessageDialog(frame, "Cuenta creada e inicio de sesión exitoso.");
         mostrarMenuPrincipal(frame);
     }
 
     private static void verInbox() {
-        // Código para ver el inbox
-        JOptionPane.showMessageDialog(null, "Método para ver el inbox llamado.");
+        if (cuentaActual == null) {
+            JOptionPane.showMessageDialog(null, "No hay ninguna cuenta activa.");
+            return;
+        }
+
+        Email[] inbox = cuentaActual.getInbox();
+        StringBuilder sb = new StringBuilder("Inbox:\n");
+        for (Email email : inbox) {
+            if (email != null) {
+                sb.append(email.toString()).append("\n");
+            }
+        }
+
+        JOptionPane.showMessageDialog(null, sb.toString());
     }
 
     private static void mandarCorreo() {
-        // Código para enviar un correo
-        JOptionPane.showMessageDialog(null, "Método para enviar un correo llamado.");
+        if (cuentaActual == null) {
+            JOptionPane.showMessageDialog(null, "No hay ninguna cuenta activa.");
+            return;
+        }
+
+        String destinatario = JOptionPane.showInputDialog(null, "Ingrese la dirección de correo del destinatario:");
+        if (destinatario == null || destinatario.trim().isEmpty()) {
+            return;
+        }
+
+        String asunto = JOptionPane.showInputDialog(null, "Ingrese el asunto del correo:");
+        if (asunto == null || asunto.trim().isEmpty()) {
+            return;
+        }
+
+        String contenido = JOptionPane.showInputDialog(null, "Ingrese el contenido del correo:");
+        if (contenido == null || contenido.trim().isEmpty()) {
+            return;
+        }
+
+        Email nuevoEmail = new Email(cuentaActual.getEmail(), destinatario, asunto, contenido);
+
+        // Buscar la cuenta del destinatario
+        boolean enviado = false;
+        for (int i = 0; i < accountCount; i++) {
+            if (accounts[i].getEmail().equals(destinatario)) {
+                if (accounts[i].receiveEmail(nuevoEmail)) {
+                    enviado = true;
+                    JOptionPane.showMessageDialog(null, "Correo enviado exitosamente.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "El inbox del destinatario está lleno.");
+                }
+                break;
+            }
+        }
+
+        if (!enviado) {
+            JOptionPane.showMessageDialog(null, "La dirección de correo del destinatario no existe.");
+        }
     }
 
     private static void leerCorreo() {
-        // Código para leer un correo
-        JOptionPane.showMessageDialog(null, "Método para leer un correo llamado.");
+        if (cuentaActual == null) {
+            JOptionPane.showMessageDialog(null, "No hay ninguna cuenta activa.");
+            return;
+        }
+
+        Email[] inbox = cuentaActual.getInbox();
+        StringBuilder sb = new StringBuilder("Seleccione un correo para leer:\n");
+        for (int i = 0; i < inbox.length; i++) {
+            if (inbox[i] != null) {
+                sb.append(i + 1).append(". ").append(inbox[i].getSubject()).append("\n");
+            }
+        }
+
+        String input = JOptionPane.showInputDialog(null, sb.toString() + "\nIngrese el número del correo:");
+        if (input == null || input.trim().isEmpty()) {
+            return;
+        }
+
+        int index = Integer.parseInt(input) - 1;
+        if (index < 0 || index >= inbox.length || inbox[index] == null) {
+            JOptionPane.showMessageDialog(null, "Número de correo inválido.");
+            return;
+        }
+
+        Email email = inbox[index];
+        if (!email.isRead()) {
+            email.markAsRead();
+        }
+
+        JOptionPane.showMessageDialog(null, "De: " + email.getSender() + "\nAsunto: " + email.getSubject() + "\nContenido: " + email.getContent());
     }
 
     private static void limpiarInbox() {
-        // Código para limpiar el inbox
-        JOptionPane.showMessageDialog(null, "Método para limpiar el inbox llamado.");
+        if (cuentaActual == null) {
+            JOptionPane.showMessageDialog(null, "No hay ninguna cuenta activa.");
+            return;
+        }
+
+        cuentaActual.clearReadEmails();
+        JOptionPane.showMessageDialog(null, "Inbox limpio: los correos leídos han sido eliminados.");
     }
 
     private static void cerrarSesion(JFrame frame) {
@@ -218,3 +302,4 @@ public class MenuPrincipal {
         mostrarMenuLogin(frame);
     }
 }
+

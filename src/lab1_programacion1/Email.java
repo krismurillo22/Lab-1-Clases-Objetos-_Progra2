@@ -24,8 +24,8 @@ public class Email {
     public boolean marcarLeido() {
         return Leido;
     }
-    public void print() {
-        System.out.println( "De: "+guardarEmail+" Asunto: "+asunto+" Contenido "+contenido+"\n ");
+    public String print() {
+        return "De: "+guardarEmail+" Asunto: "+asunto+" Contenido "+contenido+"\n ";
     }
 
 }
