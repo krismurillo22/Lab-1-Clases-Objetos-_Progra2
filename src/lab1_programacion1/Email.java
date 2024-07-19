@@ -37,7 +37,7 @@ public class Email {
     }
     public void print() {
         System.out.println("De: "+guardarEmail+" Asunto: "+asunto+" Contenido "+contenido+"\n "+Leido);
-        
+        gh0l
     }
 
   
