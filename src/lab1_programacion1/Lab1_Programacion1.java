@@ -10,11 +10,5 @@ package lab1_programacion1;
  */
 public class Lab1_Programacion1 {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
     
 }
