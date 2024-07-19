@@ -13,9 +13,8 @@ import java.awt.event.ActionListener;
  * @author Administrator
  */
 public class MenuPrincipal {
-    private static Account[] accounts = new Account[10]; // Arreglo de cuentas
-    private static int accountCount = 0; // Número actual de cuentas
-    private static Account cuentaActual = null;
+    EmailAccount cuentas;
+    Email email;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(MenuPrincipal::createAndShowGUI);

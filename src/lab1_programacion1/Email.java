@@ -1,4 +1,4 @@
-package Email;
+package lab1_programacion1;
 
 public class Email {
     private String guardarEmail;
