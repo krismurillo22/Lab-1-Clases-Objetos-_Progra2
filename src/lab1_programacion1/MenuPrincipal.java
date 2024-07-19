@@ -154,7 +154,7 @@ public class MenuPrincipal {
         }
 
         for (int i = 0; i < accountCount; i++) {
-            if (accounts[i].getEmail().equals(email) && accounts[i].getPassword().equals(password)) {
+            if (accounts[i].getDireccion().equals(email) && accounts[i].getPassword().equals(password)) {
                 cuentaActual = accounts[i];
                 JOptionPane.showMessageDialog(frame, "Inicio de sesión exitoso.");
                 mostrarMenuPrincipal(frame);
@@ -177,7 +177,7 @@ public class MenuPrincipal {
         }
 
         for (int i = 0; i < accountCount; i++) {
-            if (accounts[i].getEmail().equals(email)) {
+            if (accounts[i].getDireccion().equals(email)) {
                 JOptionPane.showMessageDialog(frame, "Cuenta ya existe.");
                 return;
             }
@@ -188,7 +188,7 @@ public class MenuPrincipal {
             return;
         }
 
-        accounts[accountCount++] = new EmailAccount(email, password, 10); // 10 es la capacidad del inbox
+        accounts[accountCount++] = new EmailAccount(email, password, ""); // 10 es la capacidad del inbox
         cuentaActual = accounts[accountCount - 1];
         JOptionPane.showMessageDialog(frame, "Cuenta creada e inicio de sesión exitoso.");
         mostrarMenuPrincipal(frame);
@@ -232,13 +232,13 @@ public class MenuPrincipal {
             return;
         }
 
-        Email nuevoEmail = new Email(cuentaActual.getEmail(), destinatario, asunto, contenido);
+        Email nuevoEmail = new Email(cuentaActual.getDireccion(), destinatario, asunto, contenido);
 
         // Buscar la cuenta del destinatario
         boolean enviado = false;
         for (int i = 0; i < accountCount; i++) {
-            if (accounts[i].getEmail().equals(destinatario)) {
-                if (accounts[i].receiveEmail(nuevoEmail)) {
+            if (accounts[i].getDireccion().equals(destinatario)) {
+                if (accounts[i].recibirEmail(nuevoEmail)) {
                     enviado = true;
                     JOptionPane.showMessageDialog(null, "Correo enviado exitosamente.");
                 } else {
@@ -263,7 +263,7 @@ public class MenuPrincipal {
         StringBuilder sb = new StringBuilder("Seleccione un correo para leer:\n");
         for (int i = 0; i < inbox.length; i++) {
             if (inbox[i] != null) {
-                sb.append(i + 1).append(". ").append(inbox[i].getSubject()).append("\n");
+                sb.append(i + 1).append(". ").append(inbox[i].getAsunto()).append("\n");
             }
         }
 
@@ -279,11 +279,11 @@ public class MenuPrincipal {
         }
 
         Email email = inbox[index];
-        if (!email.isRead()) {
-            email.markAsRead();
+        if (!email.marcarLeido()) {
+            email.marcarLeido();
         }
 
-        JOptionPane.showMessageDialog(null, "De: " + email.getSender() + "\nAsunto: " + email.getSubject() + "\nContenido: " + email.getContent());
+        JOptionPane.showMessageDialog(null, "De: " + email.getGuardarEmail() + "\nAsunto: " + email.getAsunto() + "\nContenido: " + email.getContenido());
     }
 
     private static void limpiarInbox() {
@@ -292,7 +292,7 @@ public class MenuPrincipal {
             return;
         }
 
-        cuentaActual.clearReadEmails();
+        cuentaActual.borrarLeidos();
         JOptionPane.showMessageDialog(null, "Inbox limpio: los correos leídos han sido eliminados.");
     }
 
@@ -302,4 +302,6 @@ public class MenuPrincipal {
         mostrarMenuLogin(frame);
     }
 }
+
+
 

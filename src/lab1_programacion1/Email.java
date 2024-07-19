@@ -5,7 +5,7 @@ public class Email {
     private String asunto;
     private String contenido;
     private boolean Leido;
-    public Email(String guardarEmail, String asunto, String contenido) {
+    public Email(String guardarEmail, String asunto, String contenido, String contenido1) {
         this.guardarEmail = guardarEmail;
         this.asunto = asunto;
         this.contenido = contenido;
